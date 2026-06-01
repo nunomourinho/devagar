@@ -5,6 +5,7 @@ function ScreenCuidar({ go }) {
   const t = dv.today();
   const [toast, showToast] = useToast();
   const [sheet, setSheet] = useState(null);
+  const [openTip, setOpenTip] = useState(null);
 
   const toggleMed = (id) => {
     dv.set((st) => { const m = st.meds.find((x) => x.id === id); m.taken = !m.taken; });
@@ -13,6 +14,14 @@ function ScreenCuidar({ go }) {
   const toggleMove = (id) => {
     dv.set((st) => { const m = st.moves.find((x) => x.id === id); m.done = !m.done; });
   };
+
+  const addWin = (w) => {
+    const wins = Object.assign({}, t.wins);
+    wins[w.key] = (wins[w.key] || 0) + 1;
+    dv.setToday({ wins });
+    showToast("Mais uma pequena vitória. " + w.label + " ✓");
+  };
+  const totalWins = Object.values(t.wins || {}).reduce((a, b) => a + b, 0);
 
   const medsDone = s.meds.filter((m) => m.taken).length;
   const meals = ["Pequeno-almoço", "Almoço", "Lanche", "Jantar"];
@@ -26,7 +35,33 @@ function ScreenCuidar({ go }) {
         </div>
       </div>
 
-      {/* Sono */}
+      {/* Pequenas Vitórias */}
+      <Card title="Pequenas vitórias de hoje" dotColor="sage"
+        action={totalWins > 0 ? <span className="card-sub">{totalWins} hoje</span> : null}>
+        <p className="card-sub" style={{ marginBottom: 14, fontFamily: "var(--serif)", fontSize: 15, fontStyle: "italic" }}>
+          Cada gesto de cuidado conta. Toca para celebrar — sem mínimos, sem metas.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+          {DV.WINS.map((w) => {
+            const c = col(w.color);
+            const n = (t.wins && t.wins[w.key]) || 0;
+            return (
+              <button key={w.key} className="win-tile" onClick={() => addWin(w)}
+                style={{ background: n ? c.s : "var(--surface-2)", position: "relative" }}>
+                {n > 0 && (
+                  <span style={{ position: "absolute", top: 6, right: 6, minWidth: 20, height: 20, padding: "0 5px", borderRadius: 999, background: c.c, color: "#fff", fontSize: 12, fontWeight: 700, display: "grid", placeItems: "center" }}>{n}</span>
+                )}
+                <Icon name={w.ico} size={24} color={n ? c.i : "var(--ink-3)"} />
+                <span style={{ fontSize: 13, fontWeight: 600, color: n ? c.i : "var(--ink-2)" }}>{w.label}</span>
+              </button>
+            );
+          })}
+        </div>
+        {totalWins > 0 && (
+          <button className="link-soft" style={{ display: "block", margin: "14px auto 0" }}
+            onClick={() => { dv.setToday({ wins: {} }); }}>limpar</button>
+        )}
+      </Card>
       <Card title="O sono desta noite" dotColor="sky"
         action={<Icon name="moon" size={20} color="var(--sky-ink)" />}>
         <div style={{ display: "flex", gap: 12, marginBottom: 18 }}>
@@ -137,6 +172,29 @@ function ScreenCuidar({ go }) {
           </div>
         ))}
       </Card>
+
+      {/* Dicas */}
+      <div className="section-label">Dicas para viver com fibromialgia</div>
+      {DV.TIPS.map((tip) => {
+        const c = col(tip.color);
+        const open = openTip === tip.key;
+        return (
+          <button key={tip.key} className="card flat" onClick={() => setOpenTip(open ? null : tip.key)}
+            style={{ display: "block", textAlign: "left", width: "100%", padding: 18, cursor: "pointer" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ width: 44, height: 44, borderRadius: 13, background: c.s, display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <Icon name={tip.ico} size={22} color={c.i} />
+              </div>
+              <div className="row-title" style={{ flex: 1, fontSize: 16 }}>{tip.title}</div>
+              <Icon name="chevron" size={20} color="var(--ink-3)"
+                style={{ transform: open ? "rotate(90deg)" : "none", transition: "transform .25s" }} />
+            </div>
+            {open && (
+              <p style={{ marginTop: 14, fontSize: 16, lineHeight: 1.55, color: "var(--ink-2)", textWrap: "pretty" }}>{tip.text}</p>
+            )}
+          </button>
+        );
+      })}
 
       {sheet === "med" && <AddMedSheet onClose={() => setSheet(null)} onAdd={(m) => { dv.set((st) => st.meds.push(m)); setSheet(null); showToast("Medicação adicionada"); }} />}
       {sheet === "appt" && <AddApptSheet onClose={() => setSheet(null)} onAdd={(a) => { dv.set((st) => st.appts.push(a)); setSheet(null); showToast("Consulta adicionada"); }} />}

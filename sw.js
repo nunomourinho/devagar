@@ -3,7 +3,7 @@
    Cache offline do shell + dependências (React, Babel, SQLite WASM, fontes).
    Estratégia: cache-first com preenchimento em tempo de execução.
    ============================================================ */
-const CACHE = "devagar-v1";
+const CACHE = "devagar-v3";
 
 // Ficheiros locais essenciais (a app não arranca sem estes)
 const SHELL = [
@@ -14,6 +14,7 @@ const SHELL = [
   "app/styles.css",
   "app/db.js",
   "app/data.js",
+  "app/report.jsx",
   "app/icons.jsx",
   "app/components.jsx",
   "app/tweaks-panel.jsx",

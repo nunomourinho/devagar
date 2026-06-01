@@ -18,7 +18,7 @@
       energyUsed: 0, mood: null, pain: null,
       sleepHours: null, sleepQuality: null, fog: null,
       symptoms: [], regions: {}, water: 0, meals: [],
-      flare: false, note: "",
+      wins: {}, flare: false, note: "",
     };
   }
 
@@ -193,6 +193,7 @@
     { id: "shoulderL", label: "Ombro esq." }, { id: "shoulderR", label: "Ombro dir." },
     { id: "chest", label: "Peito" }, { id: "armL", label: "Braço esq." }, { id: "armR", label: "Braço dir." },
     { id: "abdomen", label: "Abdómen" }, { id: "pelvis", label: "Anca" },
+    { id: "upperback", label: "Costas" }, { id: "lowback", label: "Lombar" },
     { id: "thighL", label: "Coxa esq." }, { id: "thighR", label: "Coxa dir." },
     { id: "kneeL", label: "Joelho esq." }, { id: "kneeR", label: "Joelho dir." },
     { id: "calfL", label: "Perna esq." }, { id: "calfR", label: "Perna dir." },
@@ -206,5 +207,23 @@
     "Foste gentil contigo. Isso também é coragem.",
     "O corpo pede pausa, e ouvi-lo é um ato de cuidado.",
     "Pequenos passos contam. Todos eles.",
+  ];
+
+  window.DV.WINS = [
+    { key: "agua", label: "Água", ico: "drop", color: "sky" },
+    { key: "respirar", label: "Respirar", ico: "wind", color: "lav" },
+    { key: "alongar", label: "Alongar", ico: "leaf", color: "sage" },
+    { key: "pausa", label: "Pausa", ico: "moon", color: "honey" },
+  ];
+
+  window.DV.TIPS = [
+    { key: "pacing", title: "Pacing (Ritmo)", ico: "spoon", color: "honey",
+      text: "Divide tarefas grandes em passos muito pequenos. Para ANTES de ficares cansado. Se achas que consegues fazer algo por 30 minutos, faz apenas 15 e descansa." },
+    { key: "sono", title: "Higiene do Sono", ico: "moon", color: "sky",
+      text: "Cria uma rotina de abrandamento 1 hora antes de dormir. Reduz a luz dos ecrãs. Um sono fragmentado agrava a dor e a fadiga muscular no dia seguinte." },
+    { key: "respiracao", title: "Respiração Diafragmática", ico: "wind", color: "lav",
+      text: "Respira fundo pela barriga. Ajuda a acalmar o sistema nervoso simpático (luta ou fuga), que muitas vezes está hiperativo na fibromialgia." },
+    { key: "nao", title: "Dizer Não", ico: "heart-pulse", color: "rose",
+      text: "Aprender a dizer \u201cnão\u201d é essencial. A tua energia é um recurso limitado. Proteger o teu descanso não é egoísmo — é tratamento médico." },
   ];
 })();

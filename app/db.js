@@ -28,6 +28,7 @@
     CREATE TABLE IF NOT EXISTS day_symptoms (date TEXT, symptom TEXT);
     CREATE TABLE IF NOT EXISTS day_regions  (date TEXT, region TEXT, intensity INTEGER);
     CREATE TABLE IF NOT EXISTS day_meals    (date TEXT, meal TEXT);
+    CREATE TABLE IF NOT EXISTS day_wins     (date TEXT, win TEXT, count INTEGER);
     CREATE TABLE IF NOT EXISTS journal (
       id INTEGER PRIMARY KEY, date TEXT, mood TEXT, text TEXT, gratitude TEXT, created_at INTEGER
     );
@@ -128,12 +129,13 @@
           energyUsed: r.energy_used || 0, mood: r.mood, pain: r.pain,
           sleepHours: r.sleep_hours, sleepQuality: r.sleep_quality, fog: r.fog,
           water: r.water || 0, flare: !!r.flare, note: r.note || "",
-          symptoms: [], regions: {}, meals: [],
+          symptoms: [], regions: {}, meals: [], wins: {},
         };
       }
       for (const r of all("SELECT * FROM day_symptoms")) if (s.days[r.date]) s.days[r.date].symptoms.push(r.symptom);
       for (const r of all("SELECT * FROM day_regions")) if (s.days[r.date]) s.days[r.date].regions[r.region] = r.intensity;
       for (const r of all("SELECT * FROM day_meals")) if (s.days[r.date]) s.days[r.date].meals.push(r.meal);
+      for (const r of all("SELECT * FROM day_wins")) if (s.days[r.date]) s.days[r.date].wins[r.win] = r.count;
 
       s.journal = all("SELECT * FROM journal ORDER BY date DESC, id DESC")
         .map((j) => ({ id: j.id, date: j.date, mood: j.mood, text: j.text, gratitude: j.gratitude, created_at: j.created_at }));
@@ -154,7 +156,7 @@
       if (!opened) return;
       db.run("BEGIN");
       try {
-        [ "profile","days","day_symptoms","day_regions","day_meals",
+        [ "profile","days","day_symptoms","day_regions","day_meals","day_wins",
           "journal","meds","appts","moves","settings" ].forEach((t) => db.run("DELETE FROM " + t));
 
         const p = state.profile;
@@ -164,6 +166,7 @@
         const insSym = db.prepare("INSERT INTO day_symptoms VALUES (?,?)");
         const insReg = db.prepare("INSERT INTO day_regions VALUES (?,?,?)");
         const insMeal = db.prepare("INSERT INTO day_meals VALUES (?,?)");
+        const insWin = db.prepare("INSERT INTO day_wins VALUES (?,?,?)");
         for (const [date, d] of Object.entries(state.days)) {
           insDay.run([date, d.energyUsed || 0, d.mood ?? null, d.pain ?? null,
             d.sleepHours ?? null, d.sleepQuality ?? null, d.fog ?? null,
@@ -171,8 +174,9 @@
           (d.symptoms || []).forEach((sy) => insSym.run([date, sy]));
           Object.entries(d.regions || {}).forEach(([rg, it]) => insReg.run([date, rg, it]));
           (d.meals || []).forEach((ml) => insMeal.run([date, ml]));
+          Object.entries(d.wins || {}).forEach(([wk, ct]) => { if (ct) insWin.run([date, wk, ct]); });
         }
-        insDay.free(); insSym.free(); insReg.free(); insMeal.free();
+        insDay.free(); insSym.free(); insReg.free(); insMeal.free(); insWin.free();
 
         const insJ = db.prepare("INSERT INTO journal VALUES (?,?,?,?,?,?)");
         state.journal.forEach((j) => insJ.run([j.id, j.date, j.mood ?? null, j.text || "", j.gratitude || "", j.created_at || j.id]));

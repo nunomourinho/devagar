@@ -84,12 +84,25 @@ function ScreenPadroes({ go }) {
         </div>
       ))}
 
-      {/* relatório para o médico */}
-      <Card title="Para a próxima consulta" dotColor="rose">
-        <p className="card-sub" style={{ marginBottom: 14 }}>Um resumo dos teus registos, pronto a mostrar à equipa médica.</p>
+      {/* relatório para o médico — email bonito */}
+      <Card title="Enviar resumo por email" dotColor="rose">
+        <p className="card-sub" style={{ marginBottom: 16 }}>
+          Gera um resumo bonito de todos os teus registos — dor, sono, humor, sintomas, medicação, consultas e diário — e envia-o por email. Ideal para mostrar à equipa médica ou guardar.
+        </p>
+        <button className="btn block" style={{ background: "var(--rose)", marginBottom: 10 }}
+          onClick={async () => {
+            showToast("A preparar o teu resumo…");
+            try {
+              const r = await DVReport.sendByEmail(s);
+              if (r === "shared") showToast("Resumo pronto a enviar.");
+              else if (r === "fallback") showToast("Resumo guardado — anexa-o ao email.");
+            } catch (e) { alert("Não foi possível preparar o email."); }
+          }}>
+          <Icon name="bell" size={18} color="#fff" /> Enviar resumo por email
+        </button>
         <button className="btn soft block" style={{ "--accent-soft": "var(--rose-soft)", "--accent-ink": "var(--rose-ink)" }}
-          onClick={() => showToast("Resumo preparado (demonstração)")}>
-          <Icon name="journal" size={18} /> Preparar resumo médico
+          onClick={() => { try { DVReport.previewReport(s); } catch (e) {} }}>
+          <Icon name="journal" size={18} /> Ver / imprimir resumo
         </button>
       </Card>
 
@@ -151,8 +164,9 @@ function ScreenPadroes({ go }) {
           </div></div>
       </Card>
 
-      <button className="btn ghost block" style={{ color: "var(--ink-3)", marginTop: 4 }} onClick={() => { if (confirm("Apagar tudo e recomeçar? Esta ação não pode ser anulada.")) { dv.reset(); } }}>
-        Apagar todos os dados
+      <button className="btn ghost block" style={{ color: "var(--ink-3)", marginTop: 4 }}
+        onClick={() => { try { DVReport.previewReport(s); } catch (e) {} }}>
+        <Icon name="journal" size={17} /> Ver a minha base de dados em resumo
       </button>
       <p style={{ textAlign: "center", fontSize: 12.5, color: "var(--ink-3)", margin: "20px 0 8px", maxWidth: 360, marginInline: "auto" }}>
         Devagar é um companheiro de bem-estar e não substitui aconselhamento médico.

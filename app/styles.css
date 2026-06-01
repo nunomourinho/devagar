@@ -321,6 +321,15 @@ textarea.journal-input::placeholder { color: var(--ink-3); }
   font-size: 21px; line-height: 1.45; color: var(--ink);
 }
 
+/* small wins tiles */
+.win-tile {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 16px 6px; border-radius: var(--r);
+  transition: transform .15s, background .2s;
+}
+.win-tile:hover { transform: translateY(-2px); }
+.win-tile:active { transform: scale(.94); }
+
 /* mini calendar week */
 .week { display: flex; gap: 7px; }
 .day {

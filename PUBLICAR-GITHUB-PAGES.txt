@@ -1,0 +1,92 @@
+============================================================
+ DEVAGAR — Publicar gratuitamente no GitHub Pages
+============================================================
+
+Resultado final: um link https:// seguro (ex.:
+https://o-seu-nome.github.io/devagar/) que pode abrir no
+telemovel e instalar como app (Android: Chrome > menu >
+"Adicionar ao ecra principal").
+
+IMPORTANTE: os seus DADOS de saude ficam sempre so no
+dispositivo. O que fica publico no GitHub e apenas o CODIGO
+da app, nunca os seus registos.
+
+------------------------------------------------------------
+ OPCAO A — Pelo site do GitHub (sem instalar nada) [RECOMENDADO]
+------------------------------------------------------------
+
+1) CRIAR CONTA
+   - Va a https://github.com e crie uma conta gratuita
+     (se ainda nao tiver).
+
+2) CRIAR O REPOSITORIO
+   - Clique no "+" no canto superior direito > "New repository".
+   - Repository name: devagar
+   - Visibilidade: Public  (necessario para Pages gratis)
+   - NAO marque "Add a README".
+   - Clique "Create repository".
+
+3) CARREGAR OS FICHEIROS
+   - Na pagina do repositorio vazio, clique no link
+     "uploading an existing file".
+   - Abra a pasta da Devagar que descarregou e ARRASTE PARA LA
+     TODO o conteudo:
+        Devagar.html
+        index.html
+        manifest.webmanifest
+        sw.js
+        .nojekyll
+        a pasta  app/
+        a pasta  icons/
+     (Pode arrastar os ficheiros e as pastas todos de uma vez.)
+   - Em baixo, clique "Commit changes".
+
+4) ATIVAR O GITHUB PAGES
+   - No repositorio, va a "Settings" (definicoes).
+   - No menu lateral, clique "Pages".
+   - Em "Build and deployment" > "Source", escolha
+     "Deploy from a branch".
+   - Em "Branch", escolha  main  e a pasta  / (root) .
+   - Clique "Save".
+
+5) OBTER O LINK
+   - Aguarde cerca de 1 minuto e atualize a pagina "Pages".
+   - Aparece: "Your site is live at
+     https://o-seu-nome.github.io/devagar/"
+   - Esse e o seu link! Abra-o no telemovel e instale.
+
+------------------------------------------------------------
+ OPCAO B — Com Git (linha de comandos, para quem ja usa)
+------------------------------------------------------------
+
+   cd  (pasta da Devagar)
+   git init
+   git add .
+   git commit -m "Devagar PWA"
+   git branch -M main
+   git remote add origin https://github.com/O-SEU-NOME/devagar.git
+   git push -u origin main
+
+   Depois, ative o Pages como no passo 4 da Opcao A.
+
+------------------------------------------------------------
+ INSTALAR NO ANDROID
+------------------------------------------------------------
+   1. Abra o link  https://...github.io/devagar/  no Chrome.
+   2. Deixe carregar uma vez com internet (prepara o offline).
+   3. Menu (tres pontos) > "Adicionar ao ecra principal" /
+      "Instalar aplicacao".
+   4. Fica um icone "Devagar" no ecra inicial, em ecra inteiro
+      e a funcionar offline.
+
+------------------------------------------------------------
+ ATUALIZAR A APP MAIS TARDE
+------------------------------------------------------------
+   - Volte ao repositorio > "Add file" > "Upload files" e
+     substitua os ficheiros alterados (Commit changes).
+   - Nota: para forcar o telemovel a buscar a nova versao,
+     o numero de versao da cache no ficheiro sw.js deve ser
+     incrementado (devagar-v1 -> devagar-v2). Peca-me que eu
+     faco isso quando houver alteracoes.
+
+============================================================
